@@ -1,4 +1,3 @@
-// src/components/XmlToMaterialUIComponent.tsx
 import React, { useState } from "react";
 import {
   Accordion,
@@ -11,13 +10,11 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { UtilityService as utility, parseXml } from "../services";
 
-interface XmlMaterialUIComponentProps {
+interface XmlMessageProps {
   xmlString: string;
 }
 
-const XmlMaterialUIComponent: React.FC<XmlMaterialUIComponentProps> = ({
-  xmlString,
-}) => {
+const XmlUIComponent: React.FC<XmlMessageProps> = ({ xmlString }) => {
   const [xmlTree, setXmlTree] = useState<any>(null);
 
   // Parse XML string into a tree structure
@@ -26,34 +23,52 @@ const XmlMaterialUIComponent: React.FC<XmlMaterialUIComponentProps> = ({
     setXmlTree(parsedXml);
   };
 
+  // Render the parsed XML tree
+  const renderXmlTree = () => {
+    if (!xmlTree) return null;
+    const nodeKeys = utility.getKeys(xmlTree);
+    return nodeKeys.map((key: any) => renderComponents(xmlTree[key], key, key));
+  };
+
+  // Trigger parsing on component mount
+  React.useEffect(() => {
+    parseXmlString(xmlString);
+  }, [xmlString]);
+
   // Function to render components based on XML tree
-  const renderComponents = (node: any, key: string, index: number) => {
+  const renderComponents = (node: any, key: string, xpath: string) => {
     if (node.xmlns) return;
     if (utility.isArray(node)) {
       return node.map((childNode: any, index: number) =>
-        renderComponents(childNode, key, index)
+        renderComponents(childNode, key, `${xpath}_${key}_${index}`)
       );
     } else if (utility.isObject(node)) {
       return (
-        <Accordion key={`${key}_${index}`} defaultExpanded>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography key={`type_${key}_${index}`}>
-              {key} {node._attributes ? ` - ${node._attributes?.xmlns}` : ""}
+        <Accordion key={`${xpath}_${key}`} defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} key={`${xpath}_${key}_summary`}>
+            <Typography key={`${xpath}_${key}_type`}>
+             {key} {node._attributes && node._attributes?.xmlns
+                ? ` - ${node._attributes.xmlns}`
+                : ""}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails key={`${xpath}_${key}_details`}>
             {node._attributes === undefined || node._attributes.xmlns
               ? utility
                   .getKeys(node)
-                  .map((key: any, index: number) =>
-                    renderComponents(node[key], key, index)
+                  .map((childKey: any) =>
+                    renderComponents(
+                      node[childKey],
+                      childKey,
+                      `${xpath}_${childKey}`
+                    )
                   )
               : utility
                   .getKeys(node._attributes)
                   .map((attr: any, index: number) => (
                     <>
                       <TextField
-                        key={`${key}_${attr}_${index}`}
+                        key={`${xpath}_${attr}_${index}`}
                         id="outlined-basic"
                         label={attr}
                         variant="outlined"
@@ -63,7 +78,7 @@ const XmlMaterialUIComponent: React.FC<XmlMaterialUIComponentProps> = ({
                         }}
                       />
                       <TextField
-                        key={`${key}_${attr}_value_${index}`}
+                        key={`${xpath}_${attr}_value_${index}`}
                         id="outlined-basic"
                         label={key}
                         variant="outlined"
@@ -80,7 +95,7 @@ const XmlMaterialUIComponent: React.FC<XmlMaterialUIComponentProps> = ({
     } else if (!utility.isObject(node) && key !== "xmlns") {
       return (
         <TextField
-          key={`field_${key}_${index}`}
+          key={`field_${xpath}`}
           id="outlined-basic"
           label={key}
           variant="outlined"
@@ -92,20 +107,6 @@ const XmlMaterialUIComponent: React.FC<XmlMaterialUIComponentProps> = ({
       );
     }
   };
-
-  // Render the parsed XML tree
-  const renderXmlTree = () => {
-    if (!xmlTree) return null;
-    const nodeKeys = utility.getKeys(xmlTree);
-    return nodeKeys.map((key: any, index: number) =>
-      renderComponents(xmlTree[key], key, index)
-    );
-  };
-
-  // Trigger parsing on component mount
-  React.useEffect(() => {
-    parseXmlString(xmlString);
-  }, [xmlString]);
 
   return (
     <Box
@@ -121,4 +122,4 @@ const XmlMaterialUIComponent: React.FC<XmlMaterialUIComponentProps> = ({
   );
 };
 
-export default XmlMaterialUIComponent;
+export default XmlUIComponent;
