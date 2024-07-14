@@ -1,30 +1,126 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![npm](https://img.shields.io/npm/v/react-xml-ui)
+![NPM](https://img.shields.io/npm/l/react-xml-ui)
+[![npm](https://img.shields.io/npm/dm/react-xml-ui)](https://npmjs.org/package/react-xml-ui)
 
-Currently, two official plugins are available:
+# ReactXmlUI
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This form is used to design React Readonly Form using any given XML/ISO 20022 messages. The primary use of this UI library is to design ISO 20022 or MX readonly forms dynamically.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- 🔥 Automatic forms generation from the given XML
+- ⚡️ Supports ISO 20022 messages:
 
-- Configure the top-level `parserOptions` property like this:
+## How to consume
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+1. Install npm package ngx-xml-message.
+
+```console
+    npm i react-xml-ui
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+```ts
+import { ReactXmlUI } from 'react-xml-ui';
+
+function App() {
+  const [xmlMessage, setXmlMessage] = useState('')
+
+  useEffect(()=>{
+    setXmlMessage(message);
+  },[xmlMessage])
+  return (
+    <>
+        <ReactXmlUI xmlString={xmlMessage}></ReactXmlUI>
+
+    </>
+  )
+}
+
+export default App
+```
+## Sample XML
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.09">
+    <Hdr>
+        <MsgId>ABC-123456</MsgId>
+        <CreDtTm>2023-06-20T09:30:00Z</CreDtTm>
+    </Hdr>
+    <Rpt>
+        <Id>ACC-78901234</Id>
+        <ElctrncSeqNb>1</ElctrncSeqNb>
+        <FrToDt>
+            <FrDtTm>2023-06-01T00:00:00Z</FrDtTm>
+            <ToDtTm>2023-06-30T23:59:59Z</ToDtTm>
+        </FrToDt>
+        <Acct>
+            <Id>
+                <IBAN>GB99X12345678901234567</IBAN>
+            </Id>
+        </Acct>
+        <Bal>
+            <Tp>
+                <CdOrPrtry>
+                    <Cd>PRCD</Cd>
+                </CdOrPrtry>
+            </Tp>
+            <Amt Ccy="EUR">100000.00</Amt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+        </Bal>
+        <Bal>
+            <Tp>
+                <CdOrPrtry>
+                    <Cd>CLBD</Cd>
+                </CdOrPrtry>
+            </Tp>
+            <Amt Ccy="EUR">2000.00</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+        </Bal>
+        <Ntry>
+            <Amt Ccy="EUR">1000.00</Amt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+            <Sts>BOOK</Sts>
+            <BookgDt>
+                <Dt>2023-06-05</Dt>
+            </BookgDt>
+            <ValDt>
+                <Dt>2023-06-05</Dt>
+            </ValDt>
+            <AcctSvcrRef>XYZ-987654</AcctSvcrRef>
+            <NtryDtls>
+                <TxDtls>
+                    <Refs>
+                        <EndToEndId>XYZ-123456</EndToEndId>
+                    </Refs>
+                    <AmtDtls>
+                        <TxAmt>
+                            <Amt Ccy="EUR">1000.00</Amt>
+                        </TxAmt>
+                    </AmtDtls>
+                    <RltdPties>
+                        <Dbtr>
+                            <Nm>John Doe</Nm>
+                            <Id>
+                                <PrvtId>
+                                    <Othr>
+                                        <Id>1234567890</Id>
+                                    </Othr>
+                                </PrvtId>
+                            </Id>
+                        </Dbtr>
+                        <Cdtr>
+                            <Nm>Company XYZ</Nm>
+                        </Cdtr>
+                    </RltdPties>
+                    <RmtInf>
+                        <Ustrd>Payment for services rendered Payment for services rendered Payment for services rendered</Ustrd>
+                    </RmtInf>
+                </TxDtls>
+            </NtryDtls>
+        </Ntry>
+        <!-- Additional Ntry elements can be added for more transactions -->
+    </Rpt>
+</Document>
+
+```
