@@ -14,7 +14,7 @@ interface XmlMessageProps {
   xmlString: string;
 }
 
-const XmlUIComponent: React.FC<XmlMessageProps> = ({ xmlString }) => {
+const ReactXmlUI: React.FC<XmlMessageProps> = ({ xmlString }) => {
   const [xmlTree, setXmlTree] = useState<any>(null);
 
   // Parse XML string into a tree structure
@@ -122,4 +122,4 @@ const XmlUIComponent: React.FC<XmlMessageProps> = ({ xmlString }) => {
   );
 };
 
-export default XmlUIComponent;
+export default ReactXmlUI;
