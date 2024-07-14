@@ -3,10 +3,24 @@
   "private": false,
   "version": "1.0.0",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/pixelbyaj/react-xml-ui"
+  },
+  "keywords": [
+    "react",
+    "xml",
+    "xmlform",
+    "xmlui",
+    "react material ui",
+    "mui",
+    "iso20022"
+  ],
   "scripts": {
     "build": "tsc && vite build",
     "preview": "vite preview",
