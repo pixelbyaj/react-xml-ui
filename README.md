@@ -3,7 +3,7 @@
 ![NPM](https://img.shields.io/npm/l/react-xml-ui)
 [![npm](https://img.shields.io/npm/dm/react-xml-ui)](https://npmjs.org/package/react-xml-ui)
 
-## [DEMO](https://stackblitz.com/edit/vitejs-vite-b2ikaj?file=tsconfig.app.json)
+## [DEMO](https://stackblitz.com/edit/vitejs-vite-b2ikaj)
 
 # ReactXmlUI
 
