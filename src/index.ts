@@ -1,3 +1,3 @@
 // src/index.ts
-export { default as ReactXmlUI } from './components';
+export { default as ReactXmlUI } from './components/ReactXmlUI';
 

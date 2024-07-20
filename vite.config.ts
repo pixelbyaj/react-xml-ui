@@ -7,7 +7,7 @@ import { globSync } from 'glob'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), dts()],
+  plugins: [react(), dts({tsconfigPath: './tsconfig.app.json', rollupTypes: true})],
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
@@ -17,7 +17,7 @@ export default defineConfig({
       // Make sure to externalize dependencies that you don't want to bundle
       external: ["react", "react-dom", "react/jsx-runtime"],
       input: Object.fromEntries(
-        globSync(['src/components/**/index.tsx', 'src/index.ts']).map((file) => {
+        globSync(['src/components/ReactXmlUI.tsx', 'src/index.ts']).map((file) => {
           // This remove `src/` as well as the file extension from each
           // file, so e.g. src/nested/foo.js becomes nested/foo
           const entryName = path.relative(
